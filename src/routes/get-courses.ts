@@ -1,40 +1,40 @@
-import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import { db } from "../database/client.ts";
-import { courses } from "../database/schema.ts";
-import z from "zod";
+import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
+import z from 'zod';
+import { db } from '../database/client.ts';
+import { courses } from '../database/schema.ts';
 
 export const getCoursesRoute: FastifyPluginAsyncZod = async (server) => {
-    server.get(
-        "/courses",
-        {
-            schema: {
-                tags: ["courses"],
-                summary: "Busca todos os cursos",
-                response: {
-                    200: z
-                        .object({
-                            courses: z.array(
-                                z.object({
-                                    id: z.uuid(),
-                                    title: z.string(),
-                                    description: z.string().optional(),
-                                })
-                            ),
-                        })
-                        .describe("Cursos encontrados com sucesso"),
-                },
-            },
+  server.get(
+    '/courses',
+    {
+      schema: {
+        tags: ['courses'],
+        summary: 'Busca todos os cursos',
+        response: {
+          200: z
+            .object({
+              courses: z.array(
+                z.object({
+                  id: z.uuid(),
+                  title: z.string(),
+                  description: z.string().optional(),
+                }),
+              ),
+            })
+            .describe('Cursos encontrados com sucesso'),
         },
-        async (request, reply) => {
-            const result = await db
-                .select({
-                    id: courses.id,
-                    title: courses.title,
-                    // description: courses.description, // posso filtrar somente os campos que quero
-                })
-                .from(courses);
+      },
+    },
+    async (_request, reply) => {
+      const result = await db
+        .select({
+          id: courses.id,
+          title: courses.title,
+          // description: courses.description, // posso filtrar somente os campos que quero
+        })
+        .from(courses);
 
-            return reply.send({ courses: result });
-        }
-    );
+      return reply.send({ courses: result });
+    },
+  );
 };
