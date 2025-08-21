@@ -1,124 +1,332 @@
-## Aprendizados
+# 🚀 API de Cursos - Node.js com Fastify
 
-## Aula 1
+Uma API REST moderna construída com Node.js, Fastify, TypeScript e PostgreSQL, utilizando Drizzle ORM para gerenciamento de banco de dados.
 
-- Rodar 'node --watch server.js' para não ficar reiniciando o servidor após alterações
-- Sempre retornar um objeto (JSON) das rotas
+## 📋 Descrição
 
-### Instalar Typescript
+Este projeto é uma API para gerenciamento de cursos, desenvolvida como parte do desafio da Rocketseat. A aplicação demonstra boas práticas de desenvolvimento com TypeScript, validação de dados com Zod, documentação automática com Swagger/OpenAPI e gerenciamento de banco de dados com Drizzle ORM.
 
-- npm i typescript @types/node -D => instalar o typescript e os types do node
-- npx tsc --init => criar o arquivo tsconfig.json
-- Acessar o repositório da microsft "ts config bases": https://github.com/tsconfig/bases?tab=readme-ov-file#node-22-tsconfigjson
-- Obter o arquivo tsconfig.json para a versão do node que esta usando'
-- Alterar o script do package.json dev para: "dev": "node --watch server.ts",
+## 🛠️ Tecnologias Utilizadas
 
-### Usando o REST Client (extensão) para API
-- Exemplo:
-	POST http://localhost:3000/courses
-	Content-Type: application/json
+- **Node.js** - Runtime JavaScript
+- **TypeScript** - Linguagem de programação tipada
+- **Fastify** - Framework web rápido e eficiente
+- **Drizzle ORM** - ORM moderno para TypeScript
+- **PostgreSQL** - Banco de dados relacional
+- **Docker** - Containerização
+- **Zod** - Validação de esquemas
+- **Swagger/OpenAPI** - Documentação da API
+- **Pino Pretty** - Logs formatados
 
-	{
-		"title": "Curso de Docker"
-	}
+## 🚀 Como Executar
 
-	###
+### Pré-requisitos
 
-	GET http://localhost:3000/courses
+- Node.js 18+
+- Docker e Docker Compose
+- npm ou yarn
 
-### Instalar o Pino Pretty
+### Instalação
 
-Serve para configurar os logs do Fastify para ficarem visualmente mais bonitos
-- npm i pino-pretty
+1. **Clone o repositório**
+```bash
+git clone <url-do-repositorio>
+cd aulas
+```
 
-## Aula 2
+2. **Instale as dependências**
+```bash
+npm install
+```
 
-### Iniciando aprendizado de Docker e ORM
-- Docker funciona como uma VM (Virtual Machine), porém aproveitando o máximo da máquina hospedeira
-	- Possível trabalhar com versões de diversas tecnologias
-	- Não é necessário a instalação de ferramentas como: dbs diferentes caso o projeto use
-	- ORM (Object Relational Mapping)
-		- Serve para comunicar e mapear as tabelas do banco de dados
-		- Java: Hibernate
-		- Python: SQL Alchemy
+3. **Configure as variáveis de ambiente**
+```bash
+cp .env.example .env
+# Edite o arquivo .env com suas configurações
+```
 
-### Comandos Docker
-- Construir o docker-compose.yml
-- docker compose up (-d)
-	- Serve para subir os serviços do docker-compose, -d serve para deixar em background
-- docker ps
-	- Serve para visualizar os containers que estão iniciados
+4. **Suba o banco de dados com Docker**
+```bash
+docker compose up -d
+```
 
-### Instalação do Drizzle (ORM)
-- npm i drizzle-kit -D
-	- Instalando apenas o Drizzle Kit para desenvolvimento
-- npm i drizzle-orm 
-	- Drizzle ORM que será usado para criação de Queries
-- npm i pg
-	- Driver do Postgres
-	- O PG é muito bom para observabilidade, pois ele envia logs com tempo que demorou as queries para ferramentas de observabilidade
+5. **Execute as migrações**
+```bash
+npm run db:migrate
+```
 
-### Configurando Drizzle
-- Criar o arquivo drizzle.config.ts
-	- Importar defineConfig do Drizzle-Kit
-	- Definir o dialect
-	- Definir o dbCredentials
-	- Definir o out
-		- Saída dos arquivos do drizzle
-	- Definir o schema
-		- Pode ser criado uma pasta src/database/schema.ts
-- Criar o .env para configurar o DATABASE_URL
-- schema.ts
-	- Criar as tabelas
-- Configurar o client.ts do Drizzle
+6. **Inicie o servidor de desenvolvimento**
+```bash
+npm run dev
+```
 
-### Comandos Drizzle
-- npx drizzle-kit generate --name
-	- Usar para gerar o SQL do schema.ts
-- npx drizzle-kit migrate
-	- Ler todos os arquivos da pasta drizzle (out) que não foram migrados e migra
-- npx drizzle-kit studio
-	- Abrir o studio para visualizar o banco de dados
-- npx drizzle-kit introspect
-	- Funcionamento inverso, o drizzle gera o schema com base no banco de dados existente (Não muito recomendado)
+O servidor estará rodando em `http://localhost:3333`
 
+## 📚 Documentação da API
 
-### Package.json
-- Configurar os comandos do drizzle
-	- "db:generate": "drizzle-kit generate",
-	- "db:migrate": "drizzle-kit migrate",
-	- "db:studio": "drizzle-kit studio"
-- Configurar a leitura do .env, pois o Node ele não lê arquivos .env
-	- "dev": "node --env-file .env --watch server.ts"
-		- Adicionar o '--env-file .env'
+A documentação da API está disponível em:
+- **Swagger UI**: `http://localhost:3333/docs` (apenas em desenvolvimento)
+- **Scalar API Reference**: Interface mais moderna e bonita
 
-### Alterando o server.ts
-- O arquivo client.ts que foi configurado para o drizzle, deve ser importado com .ts no final
-	- Para não gerar erros, deve ir no arquivo tsconfig.json e adicionar '"allowImportingTsExtensions": true,'
-	- Adicionar também o '"noEmit": true', para não usar o Typescript para converter o código para Javascript, pois o Node já suporta Typescript
+## 🗄️ Banco de Dados
 
+### Estrutura das Tabelas
 
-### Instalando zod
-- npm i zod
-	- Usado para validações
-- npm i fastify-type-provider-zod
-	- Integração do zod + fastify que facilita a utilização do zod
-	- importar validatorCompiler e serializerCompiler
-	- validatorCompiler
-		- Checagem nos dados de entrada
-		- server.setValidatorCompiler(validatorCompiler)
-	- serializerCompiler
-		- Forma de converter os dados de saída em um formato específico
-		- server.setSerializerCompiler(serializerCompiler)
-	- type ZodTypeProvider
-		- Usado para configurar o server '.withTypeProvider<ZodTypeProvider>()'
+#### Tabela `users`
+- `id` (UUID, Primary Key)
+- `name` (Text, Not Null)
+- `email` (Text, Not Null, Unique)
 
-### Instalando @fastify/swagger e @fastify/swagger-ui
-- Swagger gera uma documentação em um formato específico chamado de Open API (uma especificação)
-- Não importa a tecnologia, todas as APIs estão do formato Open API
-- @fastify/swagger-ui serve para visualizar a documentação
+#### Tabela `courses`
+- `id` (UUID, Primary Key)
+- `title` (Text, Not Null, Unique)
+- `description` (Text, Optional)
 
-### Instalando o @scalar/fastify-api-reference
-- Utilizado como UI
-- Alternativa ao Swagger UI, para uma interface mais bonita
-- Documentação: https://guides.scalar.com/scalar/introduction
+### Comandos do Drizzle
+
+```bash
+# Gerar SQL baseado no schema
+npm run db:generate
+
+# Executar migrações
+npm run db:migrate
+
+# Abrir o Drizzle Studio
+npm run db:studio
+```
+
+## 📁 Estrutura do Projeto
+
+```
+├── src/
+│   ├── database/
+│   │   ├── client.ts      # Configuração do cliente Drizzle
+│   │   └── schema.ts      # Definição das tabelas
+│   └── routes/
+│       ├── create-course.ts
+│       ├── get-courses.ts
+│       └── get-course-by-id.ts
+├── drizzle/               # Arquivos de migração gerados
+├── server.ts             # Arquivo principal do servidor
+├── drizzle.config.ts     # Configuração do Drizzle
+├── docker-compose.yml    # Configuração do Docker
+└── requests.http         # Exemplos de requisições
+```
+
+## 🔧 Scripts Disponíveis
+
+- `npm run dev` - Inicia o servidor em modo desenvolvimento
+- `npm run db:generate` - Gera arquivos de migração
+- `npm run db:migrate` - Executa migrações pendentes
+- `npm run db:studio` - Abre o Drizzle Studio
+
+## 📡 Endpoints da API
+
+### Cursos
+
+- `POST /courses` - Criar um novo curso
+- `GET /courses` - Listar todos os cursos
+- `GET /courses/:id` - Buscar curso por ID
+
+### Exemplo de Uso
+
+```bash
+# Criar um curso
+curl -X POST http://localhost:3333/courses \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Curso de Docker", "description": "Aprenda Docker do zero"}'
+
+# Listar cursos
+curl http://localhost:3333/courses
+
+# Buscar curso específico
+curl http://localhost:3333/courses/{id}
+```
+
+## 🔄 Fluxo da Aplicação
+
+### Arquitetura Geral
+
+```mermaid
+graph TD
+    A[Cliente] --> B[Fastify Server]
+    B --> C[Zod Validation]
+    C --> D[Route Handler]
+    D --> E[Drizzle ORM]
+    E --> F[PostgreSQL]
+    F --> E
+    E --> D
+    D --> G[Response]
+    G --> A
+    
+    H[Docker Compose] --> I[PostgreSQL Container]
+    I --> F
+```
+
+### Fluxo Detalhado de Criação de Curso
+
+```mermaid
+sequenceDiagram
+    participant Client as Cliente
+    participant Fastify as Fastify Server
+    participant Zod as Zod Validation
+    participant Route as Route Handler
+    participant Drizzle as Drizzle ORM
+    participant DB as PostgreSQL
+    participant Swagger as Swagger Docs
+
+    Client->>Fastify: POST /courses
+    Note over Client,Fastify: {title: "Curso Docker", description: "..."}
+    
+    Fastify->>Zod: Validar Body
+    Zod-->>Fastify: ✅ Validação OK
+    
+    Fastify->>Route: Executar Handler
+    Route->>Drizzle: db.insert(courses)
+    Drizzle->>DB: INSERT INTO courses
+    DB-->>Drizzle: ID gerado
+    Drizzle-->>Route: Resultado
+    Route-->>Fastify: {courseId: "uuid"}
+    Fastify-->>Client: 201 Created
+    
+    Note over Swagger: Documentação automática<br/>gerada via OpenAPI
+```
+
+### Fluxo de Consulta de Cursos
+
+```mermaid
+sequenceDiagram
+    participant Client as Cliente
+    participant Fastify as Fastify Server
+    participant Route as Route Handler
+    participant Drizzle as Drizzle ORM
+    participant DB as PostgreSQL
+
+    Client->>Fastify: GET /courses
+    
+    Fastify->>Route: Executar Handler
+    Route->>Drizzle: db.select().from(courses)
+    Drizzle->>DB: SELECT * FROM courses
+    DB-->>Drizzle: Dados dos cursos
+    Drizzle-->>Route: Array de cursos
+    Route-->>Fastify: {courses: [...]}
+    Fastify-->>Client: 200 OK
+```
+
+### Componentes da Aplicação
+
+```mermaid
+graph TB
+    subgraph "Frontend/Cliente"
+        A[REST Client]
+        B[cURL]
+        C[Postman]
+    end
+    
+    subgraph "API Layer"
+        D[Fastify Server]
+        E[Zod Validation]
+        F[Swagger/OpenAPI]
+    end
+    
+    subgraph "Business Logic"
+        G[Route Handlers]
+        H[Course Routes]
+    end
+    
+    subgraph "Data Layer"
+        I[Drizzle ORM]
+        J[Database Client]
+    end
+    
+    subgraph "Infrastructure"
+        K[PostgreSQL]
+        L[Docker Container]
+    end
+    
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    E --> G
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    
+    F -.-> D
+    F -.-> G
+```
+
+## 📈 Roadmap
+
+### ✅ Concluído (Aulas 1-2)
+- [x] Configuração inicial do projeto
+- [x] Setup do TypeScript
+- [x] Configuração do Fastify
+- [x] Integração com Drizzle ORM
+- [x] Configuração do PostgreSQL com Docker
+- [x] Validação com Zod
+- [x] Documentação com Swagger/OpenAPI
+- [x] CRUD básico de cursos
+
+### 🔄 Em Desenvolvimento (Aula 3)
+- [ ] Filtros e paginação
+- [ ] Soft Delete
+- [ ] Tratamento de erros
+- [ ] Testes automatizados
+- [ ] Autenticação JWT
+
+### 📋 Planejado (Aula 4)
+- [ ] Deploy da aplicação
+- [ ] Observabilidade (logs, métricas)
+- [ ] CI/CD (GitHub Actions)
+- [ ] Otimizações de performance
+
+## 🧪 Testes
+
+Para executar os testes (quando implementados):
+```bash
+npm test
+```
+
+## 🐳 Docker
+
+### Subir apenas o banco de dados
+```bash
+docker compose up -d db
+```
+
+### Ver containers rodando
+```bash
+docker ps
+```
+
+## 📝 Logs
+
+A aplicação utiliza Pino Pretty para logs formatados e legíveis. Os logs incluem:
+- Requisições HTTP
+- Tempo de resposta
+- Erros e warnings
+- Informações de debug
+
+## 🤝 Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença ISC. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 👨‍💻 Autor
+
+Desenvolvido como parte do desafio da Rocketseat.
+
+---
+
+**Nota**: Este projeto está em desenvolvimento ativo. Novas funcionalidades serão adicionadas conforme o progresso das aulas.
