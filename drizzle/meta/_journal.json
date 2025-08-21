@@ -15,6 +15,41 @@
       "when": 1755714563334,
       "tag": "0001_keen_venom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755746909165,
+      "tag": "0002_dapper_silverclaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1755747006200,
+      "tag": "0003_jazzy_skullbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1755772472692,
+      "tag": "0004_wandering_blonde_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1755773050141,
+      "tag": "0005_dry_black_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1755790127560,
+      "tag": "0006_wild_centennial",
+      "breakpoints": true
     }
   ]
 }
