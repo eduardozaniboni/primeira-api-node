@@ -10,8 +10,9 @@ WORKDIR /app
 COPY . ./
 
 # Instala somente as dependências do package-lock.json
-# --only=production instala somente as dependências necessárias
-RUN npm ci --omit=dev
+# --omit=dev instala somente as dependências necessárias
+# Mas precisamos da drizzle-kit, então vamos enviar tudo
+RUN npm ci
 
 # Porta que a aplicação roda
 EXPOSE 3333
