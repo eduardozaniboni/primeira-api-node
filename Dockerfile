@@ -11,11 +11,11 @@ COPY . ./
 
 # Instala somente as dependências do package-lock.json
 # --only=production instala somente as dependências necessárias
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Porta que a aplicação roda
 EXPOSE 3333
 
-# Comando para executar a aplicação
-CMD [ "node", "src/server.ts" ]
+# Comando para executar migrações e iniciar a aplicação
+CMD ["sh", "-c", "npm run db:migrate && node src/server.ts"]
 
