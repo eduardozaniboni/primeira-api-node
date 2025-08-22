@@ -29,24 +29,24 @@ const server = fastify({
 // Swagger + Swagger UI (Alternativa)
 // Swagger + Scalar Fastify UI (Alternativa mais bonita)
 
-if (process.env.NODE_ENV === 'development') {
-  server.register(fastifySwagger, {
-    openapi: {
-      info: {
-        title: 'Desafio Node.js',
-        version: '1.0.0',
-      },
+// if (process.env.NODE_ENV === 'development') {
+server.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: 'Desafio Node.js',
+      version: '1.0.0',
     },
-    transform: jsonSchemaTransform,
-  });
+  },
+  transform: jsonSchemaTransform,
+});
 
-  server.register(scalarAPIReference, {
-    routePrefix: '/docs',
-    configuration: {
-      theme: 'deepSpace',
-    },
-  });
-}
+server.register(scalarAPIReference, {
+  routePrefix: '/docs',
+  configuration: {
+    theme: 'deepSpace',
+  },
+});
+// }
 
 // Zod + Fastify
 
